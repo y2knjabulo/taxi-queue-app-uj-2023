@@ -2,7 +2,7 @@
 import assert from 'assert';
 import {joinQueue, queueLength, 
 		leaveQueue, joinTaxiQueue, 
-		taxiQueueLength} from '../taxi.sql.js'
+		taxiQueueLength, taxiDepart} from '../taxi.sql.js'
 
 import * as sqlite from 'sqlite';
 import sqlite3 from 'sqlite3';
@@ -91,8 +91,13 @@ describe('The taxi queue app', function() {
 
 		await joinTaxiQueue();
 		await joinTaxiQueue();
+		
 		await joinTaxiQueue();
+		await taxiDepart();
 
+		const taxiQueueLengthAfter = await taxiQueueLength();
+		
+		assert.equal(taxiQueueLengthAfter, 1);
 		// data before a taxi departs
 		assert.equal(3, await taxiQueueLength());
 		assert.equal(15, await queueLength());
@@ -123,7 +128,11 @@ describe('The taxi queue app', function() {
 		await joinTaxiQueue();
 		await joinTaxiQueue();
 		await joinTaxiQueue();
+		await joinTaxiQueue();
+		await taxiDepart();
 
+		const taxiQueueLengthAfter = await taxiQueueLength();
+		assert.equal(taxiQueueLengthAfter, 1);
 		// data before a taxi departs
 		assert.equal(3, await taxiQueueLength());
 		assert.equal(11, await queueLength());
@@ -154,6 +163,12 @@ describe('The taxi queue app', function() {
 		await joinQueue(); 
 		await joinQueue();
 		await joinQueue(); 
+		await joinTaxiQueue();
+		await taxiDepart();
+
+		const taxiQueueLengthAfter = await taxiQueueLength();
+		// assert.equal(5, await queueLength());
+		assert.equal(taxiQueueLengthAfter, 0);
 
 		// data before a taxi departs
 		assert.equal(0, await taxiQueueLength());

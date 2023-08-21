@@ -1,58 +1,53 @@
-import express from "express";
 
-// use the SQL methods in the API routes below
-import {joinQueue} from './taxi.sql.js';
+import express from "express";
+import * as taxiSql from './taxi.sql.js';
 
 const app = express();
 
 app.use(express.static('public'))
-
-// add middleware to make post routes work
 app.use(express.json());
 
 const PORT = process.env.PORT || 4015;
 
-// passenger joins the queue
-app.post('/api/passenger/join', (req, res) => {
+app.post('/api/passenger/join', async (req, res) => {
+    await taxiSql.joinQueue();
     res.json({
-        message : 'join queue'
-    })
-})
-
-// passenger leaves the queue
-app.post('/api/passenger/leave', (req, res) => {
-    res.json({
-        message : 'leave queue'
+        message: 'join queue'
     })
 });
 
-app.post('/api/taxi/join', (req, res) => {
+app.post('/api/passenger/leave', async (req, res) => {
+    await taxiSql.leaveQueue();
     res.json({
-        message : 'leave queue'
+        message: 'leave queue'
     })
 });
 
-// Note there needs to be at least 12 people in the queue for the taxi to depart
-app.post('/api/taxi/depart', (req, res) => {
+app.post('/api/taxi/join', async (req, res) => {
+    await taxiSql.joinTaxiQueue();
     res.json({
-        message : 'taxi depart from queue'
+        message: 'join taxi queue'
     })
 });
 
-
-// return the number of people in the queue
-app.get('/api/passenger/queue', (req, res) => {
-    //  return test the API call
+app.post('/api/taxi/depart', async (req, res) => {
+    await taxiSql.taxiDepart();
     res.json({
-        queueCount : 7
+        message: 'taxi depart from queue'
     })
 });
 
-// return the number of taxis in the queue
-app.get('/api/taxi/queue', (req, res) => {
+app.get('/api/passenger/queue', async (req, res) => {
+    const queueCount = await taxiSql.queueLength();
     res.json({
-        queueCount : 0
+        queueCount: queueCount
     })
 });
 
+app.get('/api/taxi/queue', async (req, res) => {
+    const taxiQueueCount = await taxiSql.taxiQueueLength();
+    res.json({
+        queueCount: taxiQueueCount
+    })
+});
 app.listen(PORT, () => console.log(`Taxi App started on port: ${PORT}`))

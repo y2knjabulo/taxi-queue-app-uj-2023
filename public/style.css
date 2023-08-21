@@ -8,13 +8,13 @@ body {
 	font-size: 4em;
 	padding: 0.1em;
 	border: 2px solid;
-	background-color: orchid;
+	background-color: rgb(148, 14, 141);
 	border-radius: 0.1em;
 }
 
 .section {
 	flex: 1;
-	background-color: steelblue;
+	background-color: rgb(28, 202, 37);
 	padding: 2em;
 	margin: 1em;
 	border-radius: 0.5em;
