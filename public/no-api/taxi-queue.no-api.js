@@ -7,8 +7,9 @@ document.addEventListener('alpine:init', () => {
 
 		return {
 			version: 'no-api-1.0',
-			peopleQueue: 0,
-			taxiQueue: 0,
+			peopleQueue : 0,
+			taxiQueue : 0,
+	
 
 			joinQueue() {
 				this.peopleQueue++;

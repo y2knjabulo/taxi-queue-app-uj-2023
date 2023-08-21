@@ -37,6 +37,7 @@ document.addEventListener('alpine:init', () => {
                 await axios.post('/api/taxi/join');
                 await this.refreshTaxiQueueLength();
             },
+		
 
             async taxiDepart() {
                 await axios.post('/api/taxi/depart');
